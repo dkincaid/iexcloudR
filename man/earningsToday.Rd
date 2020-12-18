@@ -2,10 +2,9 @@
 % Please edit documentation in R/stock.service.R
 \name{earningsToday}
 \alias{earningsToday}
-\title{Retrieve Earnings data for a given company including the actual EPS, consensus, and fiscal period.
-Earnings are available quarterly (last 4 quarters) and annually (last 4 years).}
+\title{Returns earnings that will be reported today}
 \usage{
-earningsToday(symbol, lastN = 1)
+earningsToday()
 }
 \value{
 a dataframe

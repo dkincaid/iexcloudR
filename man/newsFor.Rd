@@ -2,9 +2,15 @@
 % Please edit documentation in R/stock.service.R
 \name{newsFor}
 \alias{newsFor}
-\title{Retrieve real time traded volume on U.S. markets.}
+\title{Provides intraday news from over 3,000 global news sources including major publications,
+regional media, and social.. This endpoint returns up to the last 50 articles}
 \usage{
 newsFor(subject, lastN = 5)
+}
+\arguments{
+\item{subject}{the stock symbol}
+
+\item{lastN}{the last N news items to return}
 }
 \value{
 subject "market" | symbol

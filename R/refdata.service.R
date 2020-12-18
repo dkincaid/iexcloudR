@@ -11,7 +11,7 @@
 #' @return a dataframe
 #' @export
 #' @examples
-#' symbols("iex")
+#' listSymbols("iex")
 listSymbols <- function (symbolType = "symbols") {
   if (symbolType == 'symbols') {
     endpoint = '/ref-data/symbols'

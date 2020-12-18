@@ -29,6 +29,9 @@ Data Schedule: Market hours 9:30am-4pm ET
 
 Data Source(s): Consolidated Tape Investors Exchange
 }
+\examples{
+deepAuction('AAPL')
+}
 \seealso{
 Other deep service functions: 
 \code{\link{deepOfficialPrice}()},

@@ -7,7 +7,7 @@ meaning any firm not defined as buy-side or sell-side such as mutual funds,
 pension funds, endowments, investment firms,
 and other large entities that manage funds on behalf of others.}
 \usage{
-fundOwnership(symbol, lastN = 1)
+fundOwnership(symbol)
 }
 \arguments{
 \item{symbol}{stock symbol}

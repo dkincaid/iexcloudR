@@ -2,14 +2,22 @@
 % Please edit documentation in R/stock.service.R
 \name{indicator}
 \alias{indicator}
-\title{indicator}
+\title{Technical indicators are available for any historical or intraday range.}
 \usage{
-indicator(symbol, technicalIndicator, range, ...)
+indicator(symbol, technicalIndicator, range)
 }
 \arguments{
 \item{symbol}{a stock symbol}
+
+\item{technicalIndicator}{technical indicator}
+
+\item{range}{range}
 }
 \description{
+This endpoint calls the historical or intraday price endpoints for the given range,
+and the associated indicator for the price range.
+}
+\details{
 Data Weighting 50 per indicator value + weight of chart data returned
 }
 \examples{

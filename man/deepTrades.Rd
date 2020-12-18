@@ -17,6 +17,9 @@ Data Weighting: FREE
 \details{
 Data Source(s): Investors Exchange
 }
+\examples{
+deepTrades('AAPL')
+}
 \seealso{
 Other deep service functions: 
 \code{\link{deepAuction}()},

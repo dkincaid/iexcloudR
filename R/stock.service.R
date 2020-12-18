@@ -21,7 +21,7 @@ balanceSheet <- function (symbol,period = "quarter",lastN=1) {
   if (!is.null(data) && length(data)>0){
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   result <- tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,period=period,.before=1) %>%
+    tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
     dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
   } else {
@@ -69,7 +69,7 @@ cashflowStatement <- function (symbol,period = "quarter",lastN=1) {
   if (!is.null(data) && length(data)>0){
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   result <- tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,period=period,.before=1) %>%
+    tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
     dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
   } else {
@@ -155,7 +155,6 @@ dividends <- function (symbol, timePeriod = "3m") {
   if (!res$status) {
   data <- lapply(res$content,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy();
   } else {
     tibble::as_tibble(list());
@@ -183,12 +182,10 @@ earnings <- function (symbol, period = "quarter", lastN=1) {
   data <- res$content$earnings
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy();
 };
 
-#' Retrieve Earnings data for a given company including the actual EPS, consensus, and fiscal period.
-#'  Earnings are available quarterly (last 4 quarters) and annually (last 4 years).
+#' Returns earnings that will be reported today
 #'
 #' Data Weighting: 1000 mesaage units per symbol per period
 #'
@@ -198,7 +195,7 @@ earnings <- function (symbol, period = "quarter", lastN=1) {
 #' @export
 #' @examples
 #' earningsToday()
-earningsToday <- function (symbol, lastN=1) {
+earningsToday <- function () {
   endpoint <- glue::glue('/stock/market/today-earnings');
   res = iex_api(endpoint);
   if (res$status) return (tibble::as_tibble(list()))
@@ -254,7 +251,6 @@ estimates <- function (symbol, lastN=1) {
   data <- res$content$estimates;
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy();
 };
 
@@ -275,7 +271,6 @@ financials <- function (symbol, lastN=1) {
   data <- res$content$financials
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy();
 };
 
@@ -291,13 +286,12 @@ financials <- function (symbol, lastN=1) {
 #' @export
 #' @examples
 #' fundOwnership("AAPL")
-fundOwnership <- function (symbol, lastN=1) {
+fundOwnership <- function (symbol) {
   endpoint <- glue::glue('/stock/{symbol}/fund-ownership/');
   res = iex_api(endpoint);
   if (res$status) return (tibble::as_tibble(list()))
   data <- lapply(res$content,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy() %>%
     dplyr::mutate(report_date = lubridate::ymd(lubridate::as_datetime(report_date/1000)));
 };
@@ -333,7 +327,7 @@ fundOwnership <- function (symbol, lastN=1) {
 #' @return a dataframe
 #' @export
 #' @examples
-#' history("AAPL")
+#' historyFor("AAPL")
 historyFor <- function (symbol,
                         timePeriod = "1m",
                         chartCloseOnly = FALSE,
@@ -403,9 +397,8 @@ historyFor <- function (symbol,
     })
 
   df <- tibble::as_tibble(do.call(rbind, data)) %>%
-    tibble::add_column(symbol = symbol, .before = 1) %>%
     tidyr::unnest_legacy() %>%
-    dplyr::mutate_at(dplyr::vars(date), dplyr::funs(lubridate::ymd(.)))
+    dplyr::mutate_at(dplyr::vars(date), lubridate::ymd)
 
   if (timePeriod == "1d" | timePeriod == "5dm" || timePeriod == "1mm" | (timePeriod == 'date' && !chartByDay)) {
     df <-
@@ -419,21 +412,24 @@ historyFor <- function (symbol,
 
 }
 
-#' indicator
+#' Technical indicators are available for any historical or intraday range.
+#'
+#' This endpoint calls the historical or intraday price endpoints for the given range,
+#' and the associated indicator for the price range.
 #'
 #' Data Weighting 50 per indicator value + weight of chart data returned
+#'
 #' @param symbol a stock symbol
-#' @technicalIndicator
-#' @param range
+#' @param technicalIndicator technical indicator
+#' @param range range
 #' @export
 #' @examples
 #' indicator("AAPL","macd","6m")
-indicator <- function(symbol, technicalIndicator, range, ...) {
+indicator <- function(symbol, technicalIndicator, range) {
   endpoint <- list()
-  class(endpoint)<-"url"
+  class(endpoint) <- "url"
   endpoint$path = glue::glue("/stock/{symbol}/indicator/{technicalIndicator}");
   endpoint$query <- list(range = range);
-  endpoint$query <- append(endpoint$query,list(...))
   res <- iex_api(endpoint);
 }
 
@@ -452,7 +448,6 @@ insiderTransactions <- function (symbol) {
   if (res$status || length(res$content)==0) return (tibble::as_tibble(list()))
   data <- lapply(res$content,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy() %>%
     dplyr::mutate(effectiveDate = lubridate::ymd(lubridate::as_datetime(effectiveDate/1000)));
 };
@@ -494,7 +489,6 @@ insiderSummary <- function (symbol) {
   res = iex_api(endpoint);
   data <- lapply(res$content,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,.before=1) %>%
     tidyr::unnest_legacy()
 
 };
@@ -521,7 +515,7 @@ incomeStatement <- function (symbol,period = "quarter",lastN=1) {
   if (!is.null(data) && length(data)>0){
   data <- lapply(data,function(x){ lapply(x, function(y) {ifelse(is.null(y),NA,y)})});
   result <-tibble::as_tibble(do.call(rbind,data)) %>%
-    tibble::add_column(symbol = symbol,period=period,.before=1) %>%
+    tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
     dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
   } else {
@@ -577,7 +571,7 @@ advancedStats <- function (symbol) {
 #' @examples
 #' largestTrades("mostactive")
 largestTrades <- function (symbol) {
-  endpoint <- glue::glue('/stock/{symbol/largest-trades');
+  endpoint <- glue::glue('/stock/{symbol}/largest-trades');
   res = iex_api(endpoint);
   if (res$status) return (tibble::as_tibble(list()))
   tibble::as_tibble(do.call(rbind,res$content)) %>%
@@ -608,7 +602,7 @@ listOf <- function (listType = "mostactive") {
 #' @return a string
 #' @export
 #' @examples
-#' logo("AAPL")
+#' logoFor("AAPL")
 logoFor <- function (symbol) {
   endpoint <- glue::glue('/stock/{symbol}/logo');
   res <- iex_api(endpoint);
@@ -619,7 +613,7 @@ logoFor <- function (symbol) {
 #' @return a dataframe
 #' @export
 #' @examples
-#' marketVolumn()
+#' marketVolume()
 marketVolume <- function () {
   endpoint <- '/market';
   res = iex_api(endpoint);
@@ -628,9 +622,13 @@ marketVolume <- function () {
     tidyr::unnest_legacy();
 };
 
-#' Retrieve real time traded volume on U.S. markets.
+#' Provides intraday news from over 3,000 global news sources including major publications,
+#' regional media, and social.. This endpoint returns up to the last 50 articles
 #'
 #' Data Weight: 1 message unit per call
+#'
+#' @param subject the stock symbol
+#' @param lastN the last N news items to return
 #'
 #' @return subject "market" | symbol
 #' @export
@@ -654,6 +652,8 @@ newsFor <- function (subject,lastN = 5) {
 };
 
 #' retrieve the official open and close for a given symbol.
+#'
+#' @param symbol the market symbol
 #' @return  symbol a market symbol
 #' @export
 #' @examples
@@ -702,10 +702,12 @@ marketOpenClose <- function () {
 #'
 #' Data Weighting: 500 message units per call
 #'
+#' @param symbol the market symbol
+#'
 #' @return  an array of market symbols
 #' @export
 #' @examples
-#' peers('AAPL')
+#' peersOf('AAPL')
 peersOf <- function (symbol) {
   endpoint = glue::glue('/stock/{symbol}/peers')
   res = iex_api(endpoint);
@@ -843,7 +845,7 @@ socialSentiment <- function (symbol, date, type="daily") {
 #' @export
 #' @examples
 #' recommendationTrends("AAPL")
-recommendationTrend <- function (symbol) {
+recommendationTrends <- function (symbol) {
   endpoint <- glue::glue('/stock/{symbol}/recommendation-trends');
   res = iex_api(endpoint);
   if (res$status) return (tibble::as_tibble(list()))
@@ -869,34 +871,30 @@ recommendationTrend <- function (symbol) {
 #' @export
 #' @examples
 #' splits("AAPL", period = "1m")
-splits <- function (symbol, period = "next") {
+splits <- function(symbol, period = "next") {
   endpoint <- glue::glue('/stock/{symbol}/splits/{period}')
 
   res = iex_api(endpoint)
 
   if (res$status)
-    return (tibble::as_tibble(list()))
-  data <-
-    lapply(res, function(x) {
-      lapply(x, function(y) {
-        ifelse(is.null(y), NA, y[[1]])
-      })
-    })
+    return(tibble::as_tibble(list()))
 
-  tibble::as_tibble(do.call(rbind, data)) %>%
-    tidyr::unnest_legacy()
-
-
+  purrr::map_dfr(res$content, ~ tibble::as_tibble(purrr::map(.x, ~ ifelse(is.null(.x), NA, .x))))
 }
 
 
 #' returns upcoming earnings reportDates for market
 #'
+#' @param symbol the market symbol
+#'
+#' @return upcoming earnings data
 #' @export
-upcomingEarnings<- function(symbol = "market"){
+upcomingEarnings <- function(symbol = "market"){
   endpoint <- glue::glue("/stock/{symbol}/upcoming-earnings")
   res = iex_api(endpoint)
-  if (res$status) return (tibble::as_tibble(list()))
+  if (res$status)
+    return(tibble::as_tibble(list()))
+
   tibble::as_tibble(do.call(rbind,res$content)) %>%
     tidyr::unnest_legacy() %>% dplyr::arrange(symbol)
 }

@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 )
 library(iexcloudR)
 library(tidyquant)
+library(ggplot2)
 ```
 
 ## IEX Cloud Api

@@ -16,5 +16,5 @@ a string
 Retrieve logo url for symbols on defined lists as string
 }
 \examples{
-logo("AAPL")
+logoFor("AAPL")
 }

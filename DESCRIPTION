@@ -1,25 +1,34 @@
 Package: iexcloudR
 Type: Package
 Title: Wrapper for iexcloud Market Data Api
-Version: 0.1.4
+Version: 0.2.0
 Author: Bruce C. Schardt
 Maintainer: Bruce C. Schardt <schardt.bruce.curtis@gmail.com>
 Description: Complete interface to the iexcloud market data api from 
     IEX Group Inc. The Investors Exchange. 
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    lubridate,
+    ggplot2,
+    tidyquant,
+    qpdf
 Imports:
     magrittr,
     dplyr,
     glue,
     httr,
     tibble,
-    tidyr
+    tidyr,
+    purrr,
+    stringr,
+    jsonlite
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
+Depends:
+    R (>= 3.5.0)

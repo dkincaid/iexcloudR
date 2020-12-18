@@ -17,6 +17,12 @@ time_series(
 )
 }
 \arguments{
+\item{id}{id}
+
+\item{key}{key}
+
+\item{sub_key}{sub key}
+
 \item{from}{Optional
 Returns data on or after the given from date. Format YYYY-MM-DD. Used together with the to parameter to define a date range.}
 

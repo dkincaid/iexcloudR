@@ -6,6 +6,12 @@
 \usage{
 upcomingEarnings(symbol = "market")
 }
+\arguments{
+\item{symbol}{the market symbol}
+}
+\value{
+upcoming earnings data
+}
 \description{
 returns upcoming earnings reportDates for market
 }

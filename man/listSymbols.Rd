@@ -23,5 +23,5 @@ the Investors Exchange after the list was produced.
 }
 }
 \examples{
-symbols("iex")
+listSymbols("iex")
 }

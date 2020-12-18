@@ -23,12 +23,14 @@
 #' @param symbol a market symbol, one and only one symbol
 #' @export
 #' @examples
+#' \dontrun{
 #' deep('AAPL')
+#' }
  deep <- function(symbol) {
   endpoint <- glue::glue('/deep?symbols={symbol}');
   res = iex_api(endpoint);
   if (res$status) {
-    return (tibble::as_tibble(list()))
+    return(tibble::as_tibble(list()))
   }
   tibble::as_tibble(do.call(rbind,res$content)) %>%
     tidyr::unnest_legacy();
@@ -58,7 +60,7 @@
   #' @param symbol a market symbol, one and only one symbol
   #' @export
   #' @examples
-  #' deepAuction('AAPL')\
+  #' deepAuction('AAPL')
   deepAuction <- function(symbol) {
   endpoint <- glue::glue('/deep/auction?symbols={symbol}');
   res = iex_api(endpoint);
@@ -81,7 +83,7 @@
   #' @param symbol a market symbol, one and only one symbol
   #' @export
   #' @examples
-  #' deepOfficialPrice('AAPL')\
+  #' deepOfficialPrice('AAPL')
   deepOfficialPrice <- function(symbol) {
     endpoint <- glue::glue('/deep/official-price?symbols={symbol}');
     res <- iex_api(endpoint);
@@ -105,7 +107,7 @@
   #' @param symbol a market symbol, one and only one symbol
   #' @export
   #' @examples
-  #' deepTrades('AAPL')\
+  #' deepTrades('AAPL')
   deepTrades <- function(symbol) {
     endpoint <- glue::glue('/deep/trades?symbols={symbol}');
     res <- iex_api(endpoint);

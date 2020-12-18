@@ -6,6 +6,9 @@
 \usage{
 ohlc(symbol)
 }
+\arguments{
+\item{symbol}{the market symbol}
+}
 \value{
 symbol a market symbol
 }

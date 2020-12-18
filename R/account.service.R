@@ -16,7 +16,6 @@ addSk <- function(endpoint){
 
 #' Retrieve account details such as current tier, payment status, message quote usage, etc
 #'
-#' @param endpoint a string which will form the variable are of the endpoint URL
 #' @return parsed response data, this will usually be a list of key:value pairs from parsed json object
 #' @export
 accountMetaData <- function() {
@@ -27,7 +26,6 @@ accountMetaData <- function() {
 
 #'  Retrieve current month usage for your account.
 #'
-#' @param endpoint a string which will form the variable are of the endpoint URL
 #' @param type  "messages" | "rules" | "rule-records" | alterts" | "alert-records"
 #' @return parsed response data, this will usually be a list of key:value pairs from parsed json object
 #' @export

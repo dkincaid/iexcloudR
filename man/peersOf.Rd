@@ -6,6 +6,9 @@
 \usage{
 peersOf(symbol)
 }
+\arguments{
+\item{symbol}{the market symbol}
+}
 \value{
 an array of market symbols
 }
@@ -13,5 +16,5 @@ an array of market symbols
 Data Weighting: 500 message units per call
 }
 \examples{
-peers('AAPL')
+peersOf('AAPL')
 }

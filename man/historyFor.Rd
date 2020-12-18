@@ -62,5 +62,5 @@ This will only return IEX data with keys minute, high, low, average, volume, not
 }
 }
 \examples{
-history("AAPL")
+historyFor("AAPL")
 }

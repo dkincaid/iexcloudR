@@ -3,10 +3,10 @@
 #' @keywords internal
 #' @export
 coalesce <- function(a,b,...) {
-  if (!is.null(a)){
+  if (!is.null(a)) {
     return(a)
   }
-  if (missing(b)){
+  if (missing(b)) {
     return (NULL)
   }
   coalesce(b,...)
@@ -16,31 +16,31 @@ coalesce <- function(a,b,...) {
 addToken <- function(endpoint){
   token <- getToken();
   if (!is.null(token)) {
-    result <- ifelse(stringr::str_detect(endpoint,stringr::fixed("?")),
+    result <- ifelse(stringr::str_detect(endpoint, stringr::fixed("?")),
                       paste0(endpoint, "&token=", getToken()),
                       paste0(endpoint, "?token=", getToken())
                     )
   } else {
     stop("missing IEXCLOUD_PRIVATE_KEY value")
   }
-  return (result)
+  return(result)
 };
 
 prefix <- function() {
-  ifelse(substr(getToken(),1,1) == "T", getConfig()$sandboxURL, getConfig()$baseURL)
+  ifelse(substr(getToken(), 1, 1) == "T", getConfig()$sandboxURL, getConfig()$baseURL)
 }
 
 #' construct the url for the api get request
 #' @keywords internal
 #' @export
 constructURL <- function(endpoint) {
-  if (is(endpoint,"url")){
-    endpoint$hostname <- gsub("https://","",prefix());
+  if (is(endpoint,"url")) {
+    endpoint$hostname <- gsub("https://","", prefix());
     endpoint$scheme <- "https"
     endpoint$query$token <- getToken();
     httr::build_url(endpoint)
   } else {
-    paste0(prefix(),addToken(endpoint))
+    paste0(prefix(), addToken(endpoint))
   }
 }
 
@@ -61,7 +61,7 @@ constructURL <- function(endpoint) {
 #'
 #' @param endpoint a "url" object or a character string which will form the variable part of the endpoint URL
 #'    for a discussion of url objects see httr::build_url
-#' @return a list, class iex_api, with keys of "status,content,url,iexcloud_messages_used,response
+#' @return a list, class iex_api, with keys of "status, content, url, iexcloud_messages_used, response
 #' @export
 iex_api <- function(endpoint) {
   url <- constructURL(endpoint);

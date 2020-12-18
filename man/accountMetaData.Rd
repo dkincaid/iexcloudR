@@ -6,9 +6,6 @@
 \usage{
 accountMetaData()
 }
-\arguments{
-\item{endpoint}{a string which will form the variable are of the endpoint URL}
-}
 \value{
 parsed response data, this will usually be a list of key:value pairs from parsed json object
 }

@@ -15,7 +15,6 @@ setToken <- function(token){
 }
 
 #' retrieve the IEX API token
-#' @param token iex cloud token
 #' @export
 getToken <- function(){
   config$token;
@@ -32,7 +31,7 @@ setSecretKey <- function(secretKey){
 #' @param mc the message count
 #' @export
 setMessageCount <- function(mc){
-  config$messageCount <-mc;
+  config$messageCount <- mc;
 }
 
 #' get the message count for the last api request
@@ -42,11 +41,11 @@ getMessageCount <- function(){
 }
 
 .onLoad <- function(libname, pkgname) {
-    if (file.exists(".env")){
+    if (file.exists(".env")) {
       readRenviron(".env");
     }
 
-  env<-Sys.getenv();
+  env <- Sys.getenv();
   iexcloud <- as.list(env[grep("^IEXCLOUD",names(env))]);
   config$apiVersion <- coalesce(iexcloud$IEXCLOUD_API_VERSION,"stable")
   config$baseURL <- paste0("https://cloud.iexapis.com/",iexcloud$IEXCLOUD_API_VERSION);
@@ -56,7 +55,7 @@ getMessageCount <- function(){
     warning('IEXCLOUD_PUBLIC_KEY must be provided in environment file to access IEX Cloud API')
   }
   secret_key = iexcloud$IEXCLOUD_SECRET_KEY;
-  if (is.null(secret_key)){
+  if (is.null(secret_key)) {
     warning('IEXCLOUD_SECRET_KEY must be must be provided in environment file to access IEX Cloud API')
   }
   config$token <- token

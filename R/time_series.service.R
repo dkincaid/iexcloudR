@@ -10,6 +10,9 @@ list_all_times_series <- function(){
 #' return data for specified time series id
 #'
 #' @family time-series service
+#' @param id id
+#' @param key key
+#' @param sub_key sub key
 #' @param from	Optional
 #'   Returns data on or after the given from date. Format YYYY-MM-DD. Used together with the to parameter to define a date range.
 #' @param to	Optional

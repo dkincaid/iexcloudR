@@ -13,5 +13,5 @@ a dataframe
 Retrieve real time traded volume on U.S. markets.
 }
 \examples{
-marketVolumn()
+marketVolume()
 }

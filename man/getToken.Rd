@@ -6,9 +6,6 @@
 \usage{
 getToken()
 }
-\arguments{
-\item{token}{iex cloud token}
-}
 \description{
 retrieve the IEX API token
 }
