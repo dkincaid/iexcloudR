@@ -2,6 +2,7 @@ inst/doc
 .Rproj.user
 .Rhistory
 .RData
+.Renviron
 .Ruserdata
 .env
 .DS_Store
