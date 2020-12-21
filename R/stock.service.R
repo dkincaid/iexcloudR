@@ -23,7 +23,7 @@ balanceSheet <- function (symbol,period = "quarter",lastN=1) {
   result <- tibble::as_tibble(do.call(rbind,data)) %>%
     tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
-    dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
+    dplyr::mutate_at(dplyr::vars(reportDate), list(as.Date))
   } else {
     result <- tibble::as_tibble()
   }
@@ -71,7 +71,7 @@ cashflowStatement <- function (symbol,period = "quarter",lastN=1) {
   result <- tibble::as_tibble(do.call(rbind,data)) %>%
     tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
-    dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
+    dplyr::mutate_at(dplyr::vars(reportDate), list(as.Date))
   } else {
     result <- tibble::as_tibble();
   }
@@ -517,7 +517,7 @@ incomeStatement <- function (symbol,period = "quarter",lastN=1) {
   result <-tibble::as_tibble(do.call(rbind,data)) %>%
     tibble::add_column(period=period,.before=1) %>%
     tidyr::unnest_legacy() %>%
-    dplyr::mutate_at(dplyr::vars(reportDate),dplyr::funs(as.Date(.)))
+    dplyr::mutate_at(dplyr::vars(reportDate), list(as.Date))
   } else {
     result <- tibble::as_tibble();
   }
